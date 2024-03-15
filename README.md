@@ -116,4 +116,20 @@ docker network rm kafka-network
 ## Conclusion
 
 You now have Kafka and Zookeeper running in Docker containers, configured for development. This setup allows you to develop and test applications that produce or consume Kafka messages.
-```
+
+
+## Usage
+
+- **`make build`**: Builds Docker images for all services defined in the `docker-compose.yml`.
+
+- **`make up`**: Starts all services (Zookeeper, Kafka, kafka-consumer-go) in detached mode.
+
+- **`make down`**: Stops all the running containers and removes the containers, networks, and volumes created by `make up`.
+
+- **`make clean`**: Removes all unused Docker containers, networks, volumes, and images to keep your system clean.
+
+- **`make ps`**: Lists all running containers associated with the `docker-compose.yml`.
+
+- **`make logs`**: Tails the log output from all running services, allowing you to monitor their output in real-time.
+
+- **`make kafka-consumer-go`**: Specifically rebuilds and restarts just the `kafka-consumer-go` service, useful for quickly testing changes to your application without affecting the other services.
