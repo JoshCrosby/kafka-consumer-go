@@ -51,7 +51,7 @@ Before running your consumer, you need to produce some messages to `myTopic`. Yo
 1. **Access the Kafka Container**:
 
    ```bash
-   docker exec -it kafka /bin/bash
+   docker exec -it kafka-consumer-go-kafka-1 /bin/bash
    ```
 
 2. **Create `myTopic`**:

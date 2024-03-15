@@ -23,7 +23,9 @@ services:
       - kafka-network
 
   kafka-consumer-go:
-    build: .
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile
     depends_on:
       - kafka
     networks:

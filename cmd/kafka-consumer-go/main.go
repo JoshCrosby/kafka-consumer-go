@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"time"
+
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 func main() {
+
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "127.0.0.1:9092",
+		"bootstrap.servers": "localhost",
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})
@@ -16,15 +19,20 @@ func main() {
 		panic(err)
 	}
 
-	c.SubscribeTopics([]string{"myTopic"}, nil)
+	c.SubscribeTopics([]string{"myTopic", "^aRegex.*[Tt]opic"}, nil)
 
-	for {
-		msg, err := c.ReadMessage(-1)
+	// A signal handler or similar could be used to set this to false to break the loop.
+	run := true
+
+	for run {
+		msg, err := c.ReadMessage(time.Second)
 		if err == nil {
-			fmt.Printf("Received message: %s\n", string(msg.Value))
-		} else {
+			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+		} else if !err.(kafka.Error).IsTimeout() {
+			// The client will automatically try to recover from all errors.
+			// Timeout is not considered an error because it is raised by
+			// ReadMessage in absence of messages.
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
-			break
 		}
 	}
 
